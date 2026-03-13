@@ -3,14 +3,14 @@ import { getCart } from "@/lib/actions/cart.actions";
 import { getWishlist } from "@/lib/actions/wishlist.actions";
 import { getSessionUser } from "@/lib/actions/auth.actions";
 import Navbar from "./components/Navbar";
-
+import Hero from "./components/Hero";
 import ProductCard from "./components/ProductCard";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Truck, ShieldCheck, RotateCcw, Headphones, Tag } from "lucide-react";
 import { redirect } from "next/navigation";
 import CountdownTimer from "./components/CountdownTimer";
-import { IProduct } from "@/types";
+import { ActionResponse, IProduct } from "@/types";
 
 
 export default async function Home() {
@@ -57,58 +57,7 @@ export default async function Home() {
       <Navbar cartItemCount={cartItemCount} wishlistCount={wishlistCount} user={sessionUser} />
 
 
-      {/* Hero Section */}
-      <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-        {/* Background Image */}
-        <Image
-          src="/images/hero.png"
-          alt="Store Hero"
-          fill
-          className="object-cover"
-          priority
-        />
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/80 to-transparent" />
-
-        {/* Hero Content */}
-        <div className="absolute inset-0 flex items-center">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 w-full">
-            <div className="max-w-xl">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-                <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
-                קולקציית 2024 החדשה
-              </div>
-
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.95] tracking-tight mb-6">
-                גלו את
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500">
-                  הטוב ביותר
-                </span>
-                <br />
-                עבורכם
-              </h1>
-
-              <p className="text-slate-400 text-base md:text-lg leading-relaxed mb-8 max-w-md">
-                מבחר מוצרים יוקרתיים שנבחרו בקפידה עבור אורח החיים המודרני. איכות פוגשת אלגנטיות.
-              </p>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap gap-3">
-                <Link href="/shop" className="bg-white text-black font-bold px-8 py-3.5 rounded-full hover:bg-amber-400 transition-all duration-300 flex items-center gap-2 shadow-xl hover:shadow-amber-500/20 active:scale-[0.97]">
-                  קנו עכשיו
-                  <ArrowRight className="w-4 h-4 rotate-180" />
-                </Link>
-                <Link href="/shop?category=Collections" className="border border-white/20 text-white font-medium px-8 py-3.5 rounded-full hover:bg-white/5 transition-all duration-300">
-                  צפו בקולקציות
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* Flash Sale Section */}
       <section className="relative z-10 -mt-10 mb-10 mx-auto max-w-7xl px-4 md:px-8">

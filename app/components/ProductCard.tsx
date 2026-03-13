@@ -80,7 +80,7 @@ export default function ProductCard({ product, userId, initialWishlisted = false
     >
       <Link
         href={`/product/${product._id}`}
-        className="group relative bg-[#111111] rounded-2xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-black/40 block"
+        className="group relative glass-card rounded-2xl overflow-hidden hover:border-amber-500/30 transition-all duration-500 glow-hover block"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -127,11 +127,11 @@ export default function ProductCard({ product, userId, initialWishlisted = false
           {/* Wishlist Button */}
           <button
             onClick={handleWishlist}
-            className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center hover:bg-white transition-all shadow-lg z-10"
+            className="absolute top-3 right-3 w-9 h-9 bg-black/40 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-lg z-10 group/wishlist"
           >
             <Heart
-              className={`w-4 h-4 transition-colors ${
-                isWishlisted ? "fill-rose-500 text-rose-500" : "text-slate-600"
+              className={`w-4 h-4 transition-all duration-300 ${
+                isWishlisted ? "fill-rose-500 text-rose-500 scale-110" : "text-white group-hover/wishlist:text-rose-400"
               }`}
             />
           </button>
