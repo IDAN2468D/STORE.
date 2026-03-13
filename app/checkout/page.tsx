@@ -28,8 +28,8 @@ export default async function CheckoutPage() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar user={sessionUser} />
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-24 pb-16">
-        <h1 className="text-3xl font-black mb-8">קופה</h1>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-32 pb-16">
+        <h1 className="text-5xl font-black mb-12 italic premium-gradient-text">CHECKOUT</h1>
         <CheckoutClient userId={userId} cart={cart} />
       </div>
     </main>
