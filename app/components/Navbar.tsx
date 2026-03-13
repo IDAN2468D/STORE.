@@ -174,8 +174,24 @@ export default function Navbar({ cartItemCount = 0, wishlistCount = 0, user }: N
             >
               {item.label}
             </Link>
-
           ))}
+          {user && (
+            <>
+              <Link
+                href="/profile"
+                className="block py-3 text-slate-300 hover:text-white text-sm font-medium tracking-wide border-b border-white/5 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                הפרופיל שלי
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full text-right py-3 text-rose-400 hover:text-rose-300 text-sm font-black transition-colors"
+              >
+                התנתקות מהאתר
+              </button>
+            </>
+          )}
         </div>
       )}
     </nav>

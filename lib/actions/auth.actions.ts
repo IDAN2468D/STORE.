@@ -122,6 +122,53 @@ export async function logout() {
   return { success: true };
 }
 
+// === UPDATE ACCOUNT ===
+export async function updateAccount(params: any) {
+  try {
+    await connectToDB();
+    const { userId, name, email, password } = params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return { success: false, error: "משתמש לא נמצא" };
+    }
+
+    if (name) user.name = name;
+    if (email) {
+      const existing = await User.findOne({ email, _id: { $ne: userId } });
+      if (existing) return { success: false, error: "אימייל זה כבר בשימוש" };
+      user.email = email;
+    }
+    if (password) {
+      user.password = await bcrypt.hash(password, 12);
+    }
+
+    await user.save();
+
+    // Update session cookie with new info
+    const sessionPayload = { 
+      userId: user._id.toString(), 
+      email: user.email, 
+      name: user.name,
+      role: user.role 
+    };
+    const session = await encrypt(sessionPayload);
+
+    (await cookies()).set("session", session, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      path: "/",
+    });
+
+    revalidatePath("/profile");
+    return { success: true, data: parseStringify(user) };
+  } catch (error: any) {
+    console.error("Update failed", error);
+    return { success: false, error: "עדכון הפרטים נכשל" };
+  }
+}
+
 // === GET SESSION ===
 export async function getSessionUser() {
   const session = (await cookies()).get("session")?.value;
@@ -147,4 +194,3 @@ export async function isAdmin() {
   const decoded = await decrypt(session);
   return decoded?.role === "admin";
 }
-

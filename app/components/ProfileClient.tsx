@@ -2,8 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ShoppingBag, User as UserIcon, Settings, ChevronLeft } from "lucide-react";
+import { ShoppingBag, User as UserIcon, Settings, ChevronLeft, LogOut, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useState, useTransition } from "react";
+import { logout } from "@/lib/actions/auth.actions";
+import { useRouter } from "next/navigation";
+import SettingsModal from "./SettingsModal";
 
 interface ProfileClientProps {
   user: any;
@@ -16,6 +20,18 @@ export default function ProfileClient({
   orders, 
   wishlistCount, 
 }: ProfileClientProps) {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logout();
+      router.push("/login");
+      router.refresh();
+    });
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("he-IL", {
       year: "numeric",
@@ -68,12 +84,32 @@ export default function ProfileClient({
              </div>
           </div>
 
-          <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-black transition-all glow-hover flex items-center justify-center gap-2">
-            <Settings className="w-4 h-4" />
-            הגדרות חשבון
-          </button>
+          <div className="space-y-3">
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-full py-4 bg-white/5 hover:bg-amber-400 hover:text-black border border-white/10 rounded-2xl text-sm font-black transition-all glow-hover flex items-center justify-center gap-2"
+            >
+              <Settings className="w-4 h-4" />
+              הגדרות חשבון
+            </button>
+
+            <button 
+              onClick={handleLogout}
+              disabled={isPending}
+              className="w-full py-4 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 rounded-2xl text-sm font-black transition-all flex items-center justify-center gap-2"
+            >
+              {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+              התנתק מהחשבון
+            </button>
+          </div>
         </motion.div>
       </div>
+
+      <SettingsModal 
+        user={user} 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
 
       {/* Main Content - Orders */}
       <div className="lg:col-span-8 space-y-6">
