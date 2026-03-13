@@ -3,7 +3,9 @@
 import { connectToDB } from "@/lib/mongoose";
 import Question from "@/models/Question";
 import User from "@/models/User";
+import { isAdmin } from "./auth.actions";
 import { revalidatePath } from "next/cache";
+
 
 const parseStringify = (value: unknown) => JSON.parse(JSON.stringify(value));
 
@@ -42,7 +44,11 @@ export async function getProductQuestions(productId: string) {
 
 export async function answerQuestion(params: { questionId: string; answer: string; path: string }) {
   try {
+    const authorized = await isAdmin();
+    if (!authorized) throw new Error("רק מנהל יכול לענות על שאלות");
+    
     await connectToDB();
+
     const { questionId, answer, path } = params;
 
     const updatedQuestion = await Question.findByIdAndUpdate(

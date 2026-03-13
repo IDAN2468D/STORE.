@@ -7,8 +7,17 @@ export default async function AdminPage() {
   const statsResult = await getAdminStats();
 
   if (!statsResult.success) {
-    return <div>Error loading admin data</div>;
+    return (
+      <main className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
+        <div className="text-center p-8 bg-white/5 border border-white/10 rounded-3xl">
+          <h1 className="text-2xl font-black mb-4">גישה נדחתה</h1>
+          <p className="text-slate-400 mb-6">{statsResult.error || "אין לך הרשאות לצפות בדף זה."}</p>
+          <a href="/" className="bg-amber-500 text-black px-6 py-2 rounded-xl font-bold">חזרה לדף הבית</a>
+        </div>
+      </main>
+    );
   }
+
 
   const { totalOrders, totalProducts, totalUsers, totalRevenue, recentOrders, topProducts, dailyRevenue, salesByCategory } = statsResult.data;
 

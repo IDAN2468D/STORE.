@@ -4,6 +4,7 @@ import { connectToDB } from "@/lib/mongoose";
 import Review from "@/models/Review";
 import User from "@/models/User";
 import Product from "@/models/Product";
+import { isAdmin } from "./auth.actions";
 import { revalidatePath } from "next/cache";
 
 // Utility to serialize Mongoose documents to plain objects safely
@@ -87,14 +88,22 @@ export async function updateReview(params: {
 }
 
 // === DELETE ===
-export async function deleteReview(reviewId: string, path: string) {
+export async function deleteReview(params: { reviewId: string; userId: string; path: string }) {
   try {
     await connectToDB();
+    const { reviewId, userId, path } = params;
+
+    const review = await Review.findById(reviewId);
+    if (!review) throw new Error("ביקורת לא נמצאה");
+
+    const authorized = (await isAdmin()) || review.user.toString() === userId;
+    if (!authorized) throw new Error("אין לך הרשאה למחוק ביקורת זו");
 
     await Review.findByIdAndDelete(reviewId);
 
     revalidatePath(path);
     return { success: true, data: parseStringify({ id: reviewId }) };
+
   } catch (error: unknown) {
     console.error("Failed to delete review", error);
     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };

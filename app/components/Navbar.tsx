@@ -58,6 +58,7 @@ export default function Navbar({ cartItemCount = 0, wishlistCount = 0, user }: N
                 { label: "חנות", href: "/shop" },
                 { label: "חדש", href: "/shop?sort=newest" },
                 { label: "מבצעים", href: "/shop?sale=true" },
+                ...(user?.role === "admin" ? [{ label: "ניהול", href: "/admin" }] : []),
               ].map((item) => (
                 <Link
                   key={item.label}
@@ -161,6 +162,7 @@ export default function Navbar({ cartItemCount = 0, wishlistCount = 0, user }: N
             { label: "כל המוצרים", href: "/shop" },
             { label: "מוצרים חדשים", href: "/shop?sort=newest" },
             { label: "מבצעים", href: "/shop?sale=true" },
+            ...(user?.role === "admin" ? [{ label: "פאנל ניהול", href: "/admin" }] : []),
             { label: "רשימת משאלות", href: "/wishlist" },
           ].map((item) => (
             <Link

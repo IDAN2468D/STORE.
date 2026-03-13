@@ -53,7 +53,12 @@ export async function register(params: any) {
     });
 
     // Create session
-    const sessionPayload = { userId: newUser._id.toString(), email: newUser.email, name: newUser.name };
+    const sessionPayload = { 
+      userId: newUser._id.toString(), 
+      email: newUser.email, 
+      name: newUser.name,
+      role: newUser.role 
+    };
     const session = await encrypt(sessionPayload);
 
     (await cookies()).set("session", session, {
@@ -88,7 +93,12 @@ export async function login(params: any) {
     }
 
     // Create session
-    const sessionPayload = { userId: user._id.toString(), email: user.email, name: user.name };
+    const sessionPayload = { 
+      userId: user._id.toString(), 
+      email: user.email, 
+      name: user.name,
+      role: user.role 
+    };
     const session = await encrypt(sessionPayload);
 
     (await cookies()).set("session", session, {
@@ -128,3 +138,13 @@ export async function getSessionUser() {
     return null;
   }
 }
+
+// === ADMIN PROTECTION HELPER ===
+export async function isAdmin() {
+  const session = (await cookies()).get("session")?.value;
+  if (!session) return false;
+
+  const decoded = await decrypt(session);
+  return decoded?.role === "admin";
+}
+

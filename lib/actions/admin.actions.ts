@@ -4,12 +4,19 @@ import { connectToDB } from "@/lib/mongoose";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import User from "@/models/User";
+import { isAdmin } from "./auth.actions";
+
 
 const parseStringify = (value: unknown) => JSON.parse(JSON.stringify(value));
 
 export async function getAdminStats() {
   try {
+    const authorized = await isAdmin();
+    if (!authorized) {
+      return { success: false, error: "גישה נדחתה: חסרות הרשאות מנהל" };
+    }
     await connectToDB();
+
 
     const totalOrders = await Order.countDocuments();
     const totalProducts = await Product.countDocuments();
